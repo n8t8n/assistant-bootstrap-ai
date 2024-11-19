@@ -1,0 +1,326 @@
+:root {
+    --app-bg-body-dark: #712cf9;
+    --app-bg-dark-dark: #1a1f2a;
+    --app-bg-darkest-dark: #212834;
+    --app-bg-darker-dark: #2D3748;
+    --app-bg-user-dark: #11151d;
+    --app-text-light-dark: #f7fbff;
+    --app-text-dark-dark: #A0AEC0;
+    --app-btn-primary-dark: #712cf9;
+    --app-btn-primary-hover-dark: #7d3dfd;
+    --app-btn-secondary-dark: #2d3748;
+    --app-btn-secondary-hover-dark: white;
+    --app-border-dark: #45516b;
+    --app-bg-ai-dark: #29303f;
+    --app-user-text: #712cf9;
+
+    --app-bg-body-light: #ffffff;
+    --app-bg-dark-light: #f8f9fa;
+    --app-bg-darkest-light: #e9ecef;
+    --app-bg-darker-light: #dee2e6;
+    --app-bg-user-light: #f1f3f5;
+    --app-text-light-light: #43494e;
+    --app-text-dark-light: #6c757d;
+    --app-btn-primary-light: #712cf9;
+    --app-btn-primary-hover-light: #7d3dfd;
+    --app-btn-secondary-light: #6c757d;
+    --app-btn-secondary-hover-light: #495057;
+    --app-border-light: #ced4da;
+    --app-bg-ai-light: #f8f9fa;
+    --app-code-bg-code: #261830;
+    --app-code-text: #ff70d9;
+    --app-link-color: #e5ecff;
+    --app-link-hover-color: #a477ff;
+    --app-text-darkest: #000000;
+}
+
+[data-theme="dark"] {
+    --app-bg-body: var(--app-bg-body-dark);
+    --app-bg-dark: var(--app-bg-dark-dark);
+    --app-bg-darkest: var(--app-bg-darkest-dark);
+    --app-bg-darker: var(--app-bg-darker-dark);
+    --app-bg-user: var(--app-bg-user-dark);
+    --app-text-light: var(--app-text-light-dark);
+    --app-text-dark: var(--app-text-dark-dark);
+    --app-btn-primary: var(--app-btn-primary-dark);
+    --app-btn-primary-hover: var(--app-btn-primary-hover-dark);
+    --app-btn-secondary: var(--app-btn-secondary-dark);
+    --app-btn-secondary-hover: var(--app-btn-secondary-hover-dark);
+    --app-border: var(--app-border-dark);
+    --app-bg-ai: var(--app-bg-ai-dark);
+}
+
+[data-theme="light"] {
+    --app-bg-body: var(--app-bg-body-light);
+    --app-bg-dark: #ffffff;
+    --app-bg-darkest: var(--app-bg-darkest-light);
+    --app-bg-darker: #ebeff2;
+    --app-bg-user: #ffffff;
+    --app-text-light: var(--app-text-light-light);
+    --app-text-dark: var(--app-text-dark-light);
+    --app-btn-primary: var(--app-btn-primary-light);
+    --app-btn-primary-hover: var(--app-btn-primary-hover-light);
+    --app-btn-secondary: var(--app-btn-secondary-light);
+    --app-btn-secondary-hover: var(--app-btn-secondary-hover-light);
+    --app-code-text: var(--app-code-text);
+    --app-code-bg-code: #eaddf3;
+    --app-code-text: #8042a1;
+    --app-bg-ai: var(--app-bg-ai-light);
+    --app-link-color:var(--app-bg-body-dark);
+}
+
+a {
+    color: var(--app-link-color) !important;
+    transition: color 0.2s ease-in;
+}
+
+a:hover {
+    color: var(--app-link-hover-color) !important;
+}
+
+.dropdown-menu {
+    background-color: var(--app-bg-dark);
+    color: inherit;
+}
+
+.form-control::placeholder {
+    color: var(--app-text-darkest);
+    opacity: 1;
+}
+
+body {
+    color: var(--app-text-light);
+    background: var(--app-bg-body);
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.chat-container {
+    background-color: var(--app-bg-dark);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.chat-header {
+    background: transparent;
+    padding: 1rem;
+}
+
+.chat-header h1 {
+    font-size: 1.75rem;
+    margin: 0;
+    color: var(--app-text-light);
+}
+
+.chat-log {
+    overflow-y: auto;
+    background-color: var(--app-bg-dark);
+    height: 80vh;
+    padding-bottom: 100px !important;
+}
+
+.chat-log::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-log::-webkit-scrollbar-track {
+    background: var(--app-bg-darkest);
+}
+
+.chat-log::-webkit-scrollbar-thumb {
+    background: var(--app-border);
+    border-radius: 4px;
+}
+
+.chat-log::-webkit-scrollbar-thumb:hover {
+    background: var(--app-bg-body);
+}
+
+.chat-message {
+    animation: fadeIn 0.3s ease-in;
+}
+
+#typing-effect {
+    color: transparent !important;
+    background-image: linear-gradient(132deg, #ff2ebe, #0873ff, #8425d1);
+    background-clip: text;
+    transition: color 0.2s ease-in;
+}
+
+.message-content {
+    padding: 0.8rem;
+    border-radius: 1rem;
+    position: relative;
+    width: fit-content;
+    max-width: 90%;
+}
+
+.message-user {
+    background-color: var(--app-bg-user);
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.message-ai {
+    background-color: var(--app-bg-ai);
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+pre {
+    padding: 1em;
+    border-radius: 0.5rem;
+    margin: 1em 0;
+    color: var(--app-code-text) !important;
+    background-color: var(--app-code-bg-code) !important;
+}
+
+.btn-render {
+    margin-top: 10px;
+    background-color: var(--app-btn-primary);
+    border-color: var(--app-btn-primary);
+    border-radius: .5rem;
+}
+
+.btn-render:hover {
+    background-color: var(--app-btn-primary-hover);
+    border-color: var(--app-btn-primary-hover);
+}
+
+.btn-api {
+    background: var(--app-bg-body-dark);
+    color: white;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgb(100 13 253 / 25%);
+}
+
+.btn-api:hover {
+    background-color: var(--app-btn-primary-hover);
+    color: white;
+}
+
+.btn-settings {
+    margin-top: 10px;
+    background-color: transparent;
+    border-color: var(--app-btn-primary);
+    border-radius: .5rem;
+    color: inherit;
+}
+
+.btn-settings:hover {
+    scale: 0.95;
+}
+
+.border {
+    border-color: rgba(79, 97, 126, 0.156) !important;
+}
+
+.btn-send {
+    background-color: transparent;
+    border-color: var(--app-btn-secondary);
+    font-size: 25px;
+    border: none;
+    height: 40px;
+    color: var(--app-text-light);
+    border-radius: 0rem 2rem 2rem 0rem;
+    padding: 0px 10px;
+}
+
+.btn-send:hover,
+.btn-send:active {
+    color: var(--app-btn-secondary-hover);
+}
+
+.username {
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.2rem;
+    color: var(--app-user-text);
+}
+
+.message {
+    color: var(--app-text-light);
+    line-height: 1.5;
+}
+
+.input-container {
+    padding: 1.2rem;
+    background-color: var(--app-bg-dark);
+}
+
+.form-select,
+.form-control {
+    background-color: var(--app-bg-darker);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    color: var(--app-text-light);
+}
+
+.form-select,
+.form-control:focus {
+    background-color: var(--app-bg-darker);
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--app-text-light);
+}
+
+.form-check-input:checked {
+    background-color: var(--app-bg-body);
+    border-color: var(--app-bg-body);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-log::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-log::-webkit-scrollbar-thumb {
+    background: var(--clr-border);
+    border-radius: 4px;
+}
+
+.bg-input {
+    background-color: var(--app-bg-darker);
+    border-radius: 20px;
+
+}
+
+.input-wrapper {
+    min-height: 40px;
+    max-height: 154px;
+    overflow-y: auto;
+    padding: 10px 16px;
+    color: var(--clr-text-light);
+}
+
+
+.input-wrapper[contenteditable="true"]:empty:before {
+    content: attr(data-placeholder);
+    color: var(--clr-text-dark);
+}
+
+.input-wrapper:focus {
+    outline: none;
+}
+.input-container {
+    padding: 1.2rem;
+    width: -webkit-fill-available;
+    background-color: var(--app-bg-dark);
+}
