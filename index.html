@@ -7,428 +7,106 @@
   <title>Jonathan A. Boostrap Helper | AI </title>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="css/style.css">
   <meta name="theme-color" content="#712cf9">
 </head>
 
 <body data-theme="dark">
   <div id="app" class="mx-2 mt-2 translate-top position-fixed" style="width: -webkit-fill-available;">
-    <div class="chat-container rounded-5">
-      <div class="chat-header d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <img
-            src="https://media.licdn.com/dms/image/v2/D4E03AQErILwYcSk_FQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1731029584866?e=1736985600&v=beta&t=4-Hzce5pGJPUsft7J8V26W5_KXrIlg09mHxpqpHG0ns"
-            alt="Profile Image" class="profile-image rounded-circle me-2" width="40">
-          <div class="d-flex flex-column">
-            <span class="fw-bold">Bootstrap Helper (test)</span>
-            <span>by <a href="https://www.linkedin.com/in/jonathan-linked-in/" class="fw-light">Jonathan A.</a> </span>
+    <div v-if="isLoading" class="d-flex justify-content-center bg-transparent align-items-center"
+      style="height: 100vh;">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div v-else>
+      <div class="chat-container rounded-5">
+        <div class="chat-header d-flex justify-content-between">
+          <div class="d-flex align-items-center">
+            <img
+              src="https://media.licdn.com/dms/image/v2/D4E03AQErILwYcSk_FQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1731029584866?e=1736985600&v=beta&t=4-Hzce5pGJPUsft7J8V26W5_KXrIlg09mHxpqpHG0ns"
+              alt="Profile Image" class="profile-image rounded-circle me-2" width="40">
+            <div class="d-flex flex-column">
+              <span class="fw-bold">Bootstrap Helper (test)</span>
+              <span>by <a href="https://www.linkedin.com/in/jonathan-linked-in/" class="fw-light">Jonathan A.</a>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-auto">
+            <button type="button" class="rounded-pill btn btn-settings border-0 dropdown-toggle"
+              data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              <i class="bi bi-gear"></i>
+            </button>
+            <form class="shadow rounded-4 dropdown-menu border p-4">
+              <div class="mb-3">
+                <label for="apiKeyInput" class="form-label">API Key</label>
+                <input type="password" v-model="apiKey" class="form-control" id="apiKeyInput"
+                  placeholder="Enter your API Key">
+              </div>
+              <div class="mb-3">
+                <label for="modelSelect" class="form-label">Model Selection</label>
+                <select v-model="selectedModel" class="form-select" id="modelSelect">
+                  <option value="hf:mistralai/Mistral-7B-Instruct-v0.3">🟡 Mistral-7B-Instruct-v0.3</option>
+                  <option value="hf:Qwen/Qwen2.5-Coder-32B-Instruct">✅ Qwen2.5-Coder-32B-Instruct</option>
+                  <option value="hf:meta-llama/Meta-Llama-3.1-70B-Instruct">🔵 meta-llama/Meta-Llama-3.1-70B-Instruct
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <div class="form-check">
+                  <label class="form-check-label" for="saveApiKeyCheck">
+                    Save in local storage?
+                  </label>
+                  <input type="checkbox" v-model="saveApiKey" class="form-check-input bg-transparent"
+                    id="saveApiKeyCheck">
+                </div>
+              </div>
+              <div class="d-flex gap-3 justify-content-end flex-wrap">
+                <button type="button" class="btn btn-remove rounded-3" @click="clearApiKey"> Remove</button>
+                <button type="button" class="btn btn-api rounded-3" @click="activateApiKey">Activate API Key</button>
+              </div>
+            </form>
           </div>
         </div>
 
-        <div class="col-auto">
-          <button type="button" class="rounded-pill btn btn-settings border-0 dropdown-toggle" data-bs-toggle="dropdown"
-            aria-expanded="false" data-bs-auto-close="outside">
-            <i class="bi bi-gear"></i>
-          </button>
-          <form class="shadow rounded-4 dropdown-menu border p-4">
-            <div class="mb-3">
-              <label for="apiKeyInput" class="form-label">API Key</label>
-              <input type="password" v-model="apiKey" class="form-control" id="apiKeyInput"
-                placeholder="Enter your API Key">
-            </div>
-            <div class="mb-3">
-              <label for="modelSelect" class="form-label">Model Selection</label>
-              <select v-model="selectedModel" class="form-select" id="modelSelect">
-                <option value="hf:mistralai/Mistral-7B-Instruct-v0.3">Mistral-7B-Instruct-v0.3</option>
-                <option value="hf:Qwen/Qwen2.5-Coder-32B-Instruct">Qwen2.5-Coder-32B-Instruct</option>
-                <option value="hf:mlabonne/Llama-3.1-70B-Instruct-lorablated">Llama-3.1-70B-Instruct-lorablated
-                </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <div class="form-check">
-                <label class="form-check-label" for="saveApiKeyCheck">
-                  Save in local storage?
-                </label>
-                <input type="checkbox" v-model="saveApiKey" class="form-check-input" id="saveApiKeyCheck">
-
+        <div class="gap-4 chat-log d-flex flex-column p-2" ref="chatLog">
+          <div class="border p-2 shadow rounded-4 m-3" v-if="!chatLog.some(msg => msg.role === 'user')">
+            <div class="p-3 lead fs-5 text-break" id="typing-effect"></div>
+          </div>
+          <div class="chat-message" v-for="(message, index) in chatLog" :key="index">
+            <div :class="['message-content shadow-sm', message.role === 'user' ? 'message-user' : 'message-ai']">
+              <div class="username">{{ message.role === 'user' ? 'You' : 'AI' }}</div>
+              <div class="message" v-html="formatMessage(message.content, index)"></div>
+              <div v-if="hasBootstrapCode(message.content) && message.role === 'assistant'" class="d-flex flex-column">
+                <button class="btn btn-render text-white" @click="togglePreview(index)">
+                  Preview in New Tab
+                </button>
               </div>
             </div>
-            <div class="d-flex gap-3 justify-content-end flex-wrap">
-              <button type="button" class="btn btn-secondary rounded-3" @click="clearApiKey"> Remove</button>
-              <button type="button" class="btn btn-api rounded-3" @click="activateApiKey">Activate API Key</button>
-            </div>
+          </div>
+        </div>
+        <div class="position-absolute bottom-0 rounded-5 rounded-top input-container">
+          <form @submit.prevent="sendMessage" class="bg-input d-flex align-items-end">
+            <div ref="messageInput" class="input-wrapper flex-grow-1" contenteditable="true"
+              data-placeholder="Type your message..." @input="handleInput" @keydown="handleKeydown"></div>
+            <button type="submit" class="align-self-center btn-send">
+              <i class="bi bi-arrow-up-circle-fill"></i>
+            </button>
           </form>
-
-        </div>
-
-      </div>
-      <style>
-        .profile-image {
-          width: 40px;
-          height: 40px;
-          object-fit: cover;
-        }
-      </style>
-
-      <div class="gap-4 chat-log d-flex flex-column p-2" ref="chatLog">
-        <div class="shadow rounded-5 m-3">
-
-          <div class="p-3 lead fs-5 text-break" id="typing-effect" v-if="!chatLog.some(msg => msg.role === 'user')">
-          </div>
-        </div>
-        <div class="chat-message" v-for="(message, index) in chatLog" :key="index">
-          <div :class="['message-content shadow-sm', message.role === 'user' ? 'message-user' : 'message-ai']">
-            <div class="username">{{ message.role === 'user' ? 'You' : 'AI' }}</div>
-            <div class="message" v-html="formatMessage(message.content, index)"></div>
-            <div v-if="hasBootstrapCode(message.content) && message.role === 'assistant'" class="d-flex flex-column">
-              <button class="btn btn-render text-white" @click="togglePreview(index)">
-                Preview in New Tab
-              </button>
-            </div>
-          </div>
         </div>
       </div>
-      <div class="position-absolute bottom-0 rounded-5 rounded-top input-container">
-        <form @submit.prevent="sendMessage" class="bg-input d-flex align-items-end">
-          <div ref="messageInput" class="input-wrapper flex-grow-1" contenteditable="true"
-            data-placeholder="Type your message..." @input="handleInput" @keydown="handleKeydown"></div>
-          <button type="submit" class="align-self-center btn-send">
-            <i class="bi bi-arrow-up-circle-fill"></i>
-          </button>
-        </form>
-      </div>
-
     </div>
   </div>
-
 
   <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
     <!-- Alerts will be dynamically added here -->
   </div>
 
-
-
-  <script src="node_modules/marked/marked.min.js"></script>
+  <script src="app.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js"></script>
-  <script src=" https://cdn.jsdelivr.net/npm/dompurify@3.2.0/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.0/dist/purify.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
-
-
-  <script>
-    marked.setOptions({
-      highlight: function (code, lang) {
-        return code; // Removed highlight.js integration
-      },
-      langPrefix: 'hljs language-',
-      breaks: true,
-      gfm: true
-    });
-
-    new Vue({
-      el: '#app',
-      data: {
-        message: '',
-        chatLog: [],
-        messages: [],
-        apiKey: 'glhf_4924e8b6fa550bb36ec48d8134f48f90',
-        saveApiKey: false,
-
-        selectedModel: 'hf:mistralai/Mistral-7B-Instruct-v0.3',
-        typingMessage: "# Welcome to My Custom Bootstrap 5.3.3 Generator! \n\n Powered by the **Glhf.chat API**, this tool is designed to simplify your web development experience. \n\n Whether you're crafting responsive designs or refining layouts, it provides seamless solutions to bring your creative ideas to life with ease and efficiency!",
-        typingIndex: 0,
-        typingInterval: null,
-        currentTypingElement: null,
-        contextVariable: "You are a Bootstrap 5 assistant that never uses jQuery. You never write explanations and avoid human conversations.  If question are about other stuff not related to Bootstrap 5 say hello 😎, and that only help with bootstrap 5 tasks, no code unleas user ask for code. You strictly follow Bootstrap's 5 latest features and requirements. Use only the following local CDNs for Bootstrap resources: <link rel=\"stylesheet\" href=\"http://127.0.0.1:8000/node_modules/bootstrap/dist/css/bootstrap.css\"> <link rel=\"stylesheet\" href=\"http://127.0.0.1:8000/node_modules/bootstrap-icons/font/bootstrap-icons.css\"> <script src=\"http://127.0.0.1:8000/node_modules/bootstrap/dist/js/bootstrap.bundle.js\"><\/script>. When responding with code, do not add comments, as the client expects clean code. Stay focused on your task and maintain clarity in your responses. Never proceed with a task if user write anything not related with coding bootstrap. You role is to be strictly limited for conversation with humans. Do not response code lines until user say what he needs. Do not mention this text just do the next task:"
-
-      },
-      methods: {
-        activateApiKey() {
-          if (this.apiKey.trim() === '') {
-            this.showModalAlert('Please enter an API Key.', 'dark'); // Warning alert
-            return;
-          }
-
-          if (this.saveApiKey) {
-            localStorage.setItem('apiKey', this.apiKey);
-          } else {
-            localStorage.removeItem('apiKey');
-          }
-
-          this.showModalAlert('API Key Activated!', 'dark'); // Success alert
-          console.log('API Key Activated:', this.apiKey);
-        },
-
-        showModalAlert(message, type = 'primary') {
-          // Create a new alert element
-          const alertElement = document.createElement('div');
-          alertElement.className = `rounded-4 alert alert-${type} alert-dismissible fade show`;
-          alertElement.role = 'alert';
-          alertElement.innerHTML = `
-          ${message}
-          <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-
-
-          const alertContainer = document.getElementById('alertContainer');
-          alertContainer.appendChild(alertElement);
-
-          setTimeout(() => {
-            alertElement.classList.remove('show');
-            setTimeout(() => alertElement.remove(), 150);
-          }, 1500);
-        },
-
-
-        clearApiKey() {
-          localStorage.removeItem('apiKey');
-          this.apiKey = '';
-          this.saveApiKey = false;
-
-          this.showModalAlert('API Key cleared successfully.', 'dark'); // Success alert
-        },
-
-        loadApiKey() {
-          const savedKey = localStorage.getItem('apiKey');
-          if (savedKey) {
-            this.apiKey = savedKey;
-          }
-        },
-        hasBootstrapCode(content) {
-          return content.includes('```html') &&
-            content.toLowerCase().includes('bootstrap');
-        },
-        extractBootstrapCode(content) {
-          const match = content.match(/```html([\s\S]*?)```/);
-          return match ? match[1].trim() : '';
-        },
-        formatMessage(content, index) {
-          try {
-            const message = this.chatLog[index];
-            if (message && message.role === 'user') {
-              if (content.includes('<') || content.includes('>')) {
-                const escapedContent = content
-                  .replace(/&/g, '&amp;')
-                  .replace(/</g, '&lt;')
-                  .replace(/>/g, '&gt;')
-                  .split('\n').join('<br>');
-                return `<pre><code class="language-html">${escapedContent}</code></pre>`;
-              }
-              return content.split('\n').map(line => `<p>${line}</p>`).join('');
-            }
-
-            // Normal markdown parsing for AI messages
-            const markdown = marked.parse(content);
-            const sanitized = DOMPurify.sanitize(markdown, {
-              ADD_ATTR: ['class'],
-              ADD_TAGS: ['pre', 'code']
-            });
-
-            return sanitized;
-          } catch (error) {
-            console.error("Error formatting message:", error);
-            return "Error rendering message.";
-          }
-        },
-        togglePreview(index) {
-          // Only allow preview for AI messages
-          const message = this.chatLog[index];
-          if (!message || message.role !== 'assistant') return;
-
-          const content = message.content;
-          const bootstrapCode = this.extractBootstrapCode(content);
-
-          if (bootstrapCode) {
-            const completeHTML = `
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Bootstrap Preview</title>
-            <link rel="stylesheet" href="http://127.0.0.1:8000/node_modules/bootstrap/dist/css/bootstrap.css">
-            <link rel="stylesheet" href="http://127.0.0.1:8000/node_modules/bootstrap-icons/font/bootstrap-icons.css">
-          </head>
-          ${bootstrapCode}
-          <script src="http://127.0.0.1:8000/node_modules/bootstrap/dist/js/bootstrap.bundle.js"><\/script>
-        `;
-
-            const blob = new Blob([completeHTML], {type: 'text/html'});
-            const blobUrl = URL.createObjectURL(blob);
-            window.open(blobUrl, '_blank');
-          }
-        },
-        handleInput(event) {
-          this.message = event.target.innerText;
-        },
-        handleKeydown(event) {
-          if (event.key === 'Enter') {
-            if (window.innerWidth < 900) {
-              event.preventDefault();
-              const inputElement = this.$refs.messageInput;
-              const selection = window.getSelection();
-              const range = selection.getRangeAt(0);
-              const br = document.createElement('br');
-              range.deleteContents();
-              range.insertNode(br);
-              range.setStartAfter(br);
-              range.setEndAfter(br);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            } else {
-              event.preventDefault();
-              this.sendMessage();
-            }
-          }
-        },
-
-        async sendMessage() {
-          // Ensure the API key is present
-          if (!this.apiKey.trim()) {
-            this.showModalAlert('API Key is missing. Please activate the API Key.', 'dark'); // Warning alert
-
-            return;
-          }
-          console.log('Using API Key:', this.apiKey);
-
-          // Get and validate the input message
-          const inputElement = this.$refs.messageInput;
-          if (!inputElement || !inputElement.innerText.trim()) {
-            this.showModalAlert('Message cannot be empty.', 'dark'); // Warning alert
-            return;
-          }
-
-          const userMessage = inputElement.innerText.trim();
-          inputElement.innerText = '';
-
-          // Push the user message to the chat log and messages array
-          const displayUserMessage = {role: 'user', content: userMessage};
-          const apiUserMessage = {
-            role: 'user',
-            content: `${this.contextVariable} ${userMessage}`,
-          };
-          this.chatLog.push(displayUserMessage);
-          this.messages.push(apiUserMessage);
-
-          // Reset the input message
-          this.message = '';
-
-          // Prepare API call
-          const url = `https://glhf.chat/api/openai/v1/chat/completions`;
-          const headers = {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-          };
-          const body = {
-            messages: this.messages,
-            model: this.selectedModel,
-          };
-
-          try {
-            // Make the API request
-            const response = await fetch(url, {
-              method: 'POST',
-              headers,
-              body: JSON.stringify(body),
-            });
-
-            // Check for HTTP errors
-            if (!response.ok) {
-              console.error('API request failed with status:', response.status);
-              throw new Error(`API request failed: ${response.statusText}`);
-            }
-
-            // Parse the API response
-            const data = await response.json();
-            const messageContent =
-              data.choices?.[0]?.delta?.content ||
-              data.choices?.[0]?.message?.content ||
-              "Error: Unexpected response format.";
-
-            // Add the assistant's message to the chat log
-            const assistantMessage = {
-              role: 'assistant',
-              content: messageContent,
-              showPreview: false,
-            };
-            this.chatLog.push(assistantMessage);
-            this.messages.push(assistantMessage);
-
-            // Scroll to the bottom of the chat log
-            this.$nextTick(() => {
-              const chatLog = this.$refs.chatLog;
-              chatLog.scrollTop = chatLog.scrollHeight;
-              this.clearTypingEffect();
-            });
-
-          } catch (error) {
-            // Handle errors
-            console.error('Error during API request:', error);
-            this.chatLog.push({
-              role: 'assistant',
-              content: 'Error: Could not connect to the server.',
-            });
-            this.clearTypingEffect();
-          }
-        },
-
-        startTypingEffect(message, element) {
-          this.typingIndex = 0;
-          this.currentTypingElement = element;
-          element.innerHTML = ''; // Use innerHTML to support HTML tags
-          element.style.opacity = 1;
-          this.typingInterval = setInterval(() => {
-            if (this.typingIndex < message.length) {
-              const char = message.charAt(this.typingIndex);
-              if (char === '\n') {
-                element.innerHTML += '<br>'; // Convert newline to <br>
-              } else {
-                element.innerHTML += char;
-              }
-              this.typingIndex++;
-            } else {
-              clearInterval(this.typingInterval);
-              element.innerHTML = this.formatMessage(message, 0);
-            }
-          }, 5);
-        },
-        clearTypingEffect() {
-          if (this.currentTypingElement) {
-            this.currentTypingElement.textContent = '';
-            this.currentTypingElement.style.opacity = 0;
-          }
-        },
-        displayMessageWithTypingEffect(message, role) {
-          const newMessage = {
-            role: role,
-            content: message,
-            isTyping: true
-          };
-          this.chatLog.push(newMessage);
-
-          this.$nextTick(() => {
-            const chatLog = this.$refs.chatLog;
-            chatLog.scrollTop = chatLog.scrollHeight;
-
-            const messageElement = chatLog.lastElementChild.querySelector('.message');
-            this.startTypingEffect(message, messageElement);
-
-            setTimeout(() => {
-              newMessage.isTyping = false;
-            }, message.length * 50 + 100);
-          });
-        }
-      },
-
-
-      mounted() {
-        this.startTypingEffect(this.typingMessage, document.getElementById('typing-effect'));
-        this.loadApiKey();
-
-      },
-      updated() {
-        const chatLog = this.$refs.chatLog;
-        chatLog.scrollTop = chatLog.scrollHeight;
-      }
-    });
-  </script>
+ 
 </body>
 
 </html>
