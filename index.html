@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
   <meta name="theme-color" content="#712cf9">
+  <script src="js/app.js" type="module"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.0/dist/purify.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+
 </head>
 
 <body data-theme="dark">
@@ -22,12 +28,11 @@
       <div class="chat-container rounded-5">
         <div class="chat-header d-flex justify-content-between">
           <div class="d-flex align-items-center">
-            <img
-              src="https://media.licdn.com/dms/image/v2/D4E03AQErILwYcSk_FQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1731029584866?e=1736985600&v=beta&t=4-Hzce5pGJPUsft7J8V26W5_KXrIlg09mHxpqpHG0ns"
-              alt="Profile Image" class="profile-image rounded-circle me-2" width="40">
+            <img src="images/n8t8n-profile-jonathan-a-linkedin-sales.jpg" alt="Profile Image"
+              class="profile-image rounded-circle me-2" width="40">
             <div class="d-flex flex-column">
               <span class="fw-bold">Bootstrap Helper (test)</span>
-              <span>by <a href="https://www.linkedin.com/in/jonathan-linked-in/" class="fw-light">Jonathan A.</a>
+              <span>by <a href="https://pa.linkedin.com/in/n8t8n" class="fw-light">Jonathan A.</a>
               </span>
             </div>
           </div>
@@ -37,33 +42,42 @@
               data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
               <i class="bi bi-gear"></i>
             </button>
-            <form class="shadow rounded-4 dropdown-menu border p-4">
+            <form class="width-menu shadow rounded-4 dropdown-menu border p-4">
+              <!-- Hidden username field for accessibility -->
+              <input type="text" name="username" autocomplete="username" style="display:none;">
               <div class="mb-3">
                 <label for="apiKeyInput" class="form-label">API Key</label>
                 <input type="password" v-model="apiKey" class="form-control" id="apiKeyInput"
-                  placeholder="Enter your API Key">
+                  placeholder="Enter your API Key" autocomplete="new-password">
+              </div>
+              <div class="d-none  mb-3">
+                <label for="contextoInput" class="form-label">Context</label>
+                <textarea disabled type="text" v-model="contexto" class="form-control" id="contextoInput"
+                  placeholder="Enter a context"></textarea>
               </div>
               <div class="mb-3">
                 <label for="modelSelect" class="form-label">Model Selection</label>
                 <select v-model="selectedModel" class="form-select" id="modelSelect">
-                  <option value="hf:mistralai/Mistral-7B-Instruct-v0.3">🟡 Mistral-7B-Instruct-v0.3</option>
+                  <!-- <option value="hf:mistralai/Mistral-7B-Instruct-v0.3">🟡 Mistral-7B-Instruct-v0.3</option> -->
                   <option value="hf:Qwen/Qwen2.5-Coder-32B-Instruct">✅ Qwen2.5-Coder-32B-Instruct</option>
-                  <option value="hf:meta-llama/Meta-Llama-3.1-70B-Instruct">🔵 meta-llama/Meta-Llama-3.1-70B-Instruct
+                  <!-- <option value="hf:meta-llama/Meta-Llama-3.1-70B-Instruct">🔵 meta-llama/Meta-Llama-3.1-70B-Instruct -->
                   </option>
                 </select>
               </div>
               <div class="mb-3">
                 <div class="form-check">
                   <label class="form-check-label" for="saveApiKeyCheck">
-                    Save in local storage?
+                    Wanna save this locally for a bit?
                   </label>
                   <input type="checkbox" v-model="saveApiKey" class="form-check-input bg-transparent"
                     id="saveApiKeyCheck">
                 </div>
               </div>
               <div class="d-flex gap-3 justify-content-end flex-wrap">
-                <button type="button" class="btn btn-remove rounded-3" @click="clearApiKey"> Remove</button>
-                <button type="button" class="btn btn-api rounded-3" @click="activateApiKey">Activate API Key</button>
+                <button type="button" class="btn btn-remove rounded-3" @click="clearApiKey">Remove API key &
+                  Context</button>
+                <button aria-expanded="false" data-bs-auto-close="outside" type="button" class="btn btn-api rounded-3"
+                  @click="activateApiKey">Enable Chat</button>
               </div>
             </form>
           </div>
@@ -102,11 +116,7 @@
     <!-- Alerts will be dynamically added here -->
   </div>
 
-  <script src="app.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.0/dist/purify.min.js"></script>
-  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
- 
+
 </body>
 
 </html>

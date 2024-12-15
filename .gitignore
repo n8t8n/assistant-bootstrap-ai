@@ -1,2 +1,5 @@
 *.DS_store
 node_modules
+css/xcustom-style.css
+js/xapp.js
+js/xmethods.js

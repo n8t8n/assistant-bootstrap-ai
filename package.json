@@ -6,6 +6,10 @@
     "bootstrap-icons": "^1.11.3",
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
     "marked": "^15.0.0"
   }
 }
